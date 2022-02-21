@@ -1,5 +1,7 @@
 import numpy as np
 from os.path import join as pjoin, dirname
+
+import pandas as pd
 from scipy.io import loadmat
 from sklearn.linear_model import LogisticRegression
 from sklearn.linear_model import LinearRegression
@@ -23,6 +25,9 @@ class Descriptive:
         self.trialresponseside_right[self.trialresponseside_right == -1] = 0
 
     def train(self):
+        right_prob = np.convolve(self.trialresponseside_right, np.ones(21)/21, 'same')
+        right_prob = pd.DataFrame(right_prob).apply(lambda x: np.log(x/(1-x)))
+
         # training data
         train = []
 
@@ -40,9 +45,7 @@ class Descriptive:
                     choice_temp.append(-1)
             train.append(rewards_temp + choice_temp + [1])
         X = np.array(train)
-        y = np.array(self.trialresponseside_right[15:])
-        print(X.shape)
-        print(y.shape)
+        y = np.array(right_prob[15:])
         assert X.shape[1] == 31, 'training set initialization error'
 
         model = LogisticRegression()
@@ -60,3 +63,6 @@ class Descriptive:
 
     def remove_nans(self, np_array):
         return np_array[~np.isnan(np_array)]
+
+    def log_odds(self, x):
+        return np.log(x / (1-x))
