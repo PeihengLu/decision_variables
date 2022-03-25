@@ -5,7 +5,7 @@ function [Q_l, Q_r, zeta, alpha, beta, b] = generate_four_par(trialresponseside,
     best_alpha = 0;
     best_beta = 0;
     best_b = 0;
-    
+
     % save a copy of trialresponseside and trialreward then removes the
     % nan values from them for the parameter search
     trialresponseside_original = trialresponseside;
@@ -79,12 +79,12 @@ function [Q_l, Q_r, zeta, alpha, beta, b] = generate_four_par(trialresponseside,
             end
         end
     end
-        
+
     zeta = best_zeta;
     alpha = best_alpha;
     beta = best_beta;
     b = best_b;
-    
+
     % with all parameters found, we can run the generative model using the
     % original data (with the nan values)
     trialreward = trialreward_original;
